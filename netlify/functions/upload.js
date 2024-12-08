@@ -39,17 +39,17 @@ exports.handler = async (event) => {
             };
         }
 
-        // פענוח ה-FormData
+        // פענוח multipart/form-data
         const boundary = contentType.split('boundary=')[1];
         const parts = parseMultipartFormData(Buffer.from(event.body, 'base64'), boundary);
 
         // שמירת הקובץ לנתיב זמני
-        const file = parts.files.file; // 'file' הוא שם הקובץ שהועלה
+        const file = parts.files.file;
         const filePath = path.join('/tmp', file.filename);
         fs.writeFileSync(filePath, file.content);
 
         // יצירת URL ציבורי
-        const publicUrl = `https://${process.env.SITE_NAME}.netlify.app/uploads/${file.filename}`;
+        const publicUrl = `https://${process.env.STORAGE_BASE_URL}.netlify.app/uploads/${file.filename}`;
         return {
             statusCode: 200,
             headers: {
@@ -69,7 +69,7 @@ exports.handler = async (event) => {
     }
 };
 
-// פונקציה לעיבוד multipart/form-data
+// פונקציה לפענוח multipart/form-data
 function parseMultipartFormData(body, boundary) {
     const parts = body.toString().split(`--${boundary}`);
     const files = {};

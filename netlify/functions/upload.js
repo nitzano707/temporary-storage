@@ -7,7 +7,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 200,
             headers: {
-                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': 'https://ivritgit.netlify.app', // החלף בכתובת האפליקציה שלך
                 'Access-Control-Allow-Methods': 'POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type',
             },
@@ -20,7 +20,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 405,
             headers: {
-                'Access-Control-Allow-Origin': '*', // מאפשר בקשות מכל דומיין
+                'Access-Control-Allow-Origin': 'https://ivritgit.netlify.app', // החלף בכתובת האפליקציה שלך
             },
             body: JSON.stringify({ error: 'Method Not Allowed' }),
         };
@@ -33,7 +33,7 @@ exports.handler = async (event) => {
             return {
                 statusCode: 400,
                 headers: {
-                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Origin': 'https://ivritgit.netlify.app', // החלף בכתובת האפליקציה שלך
                 },
                 body: JSON.stringify({ error: 'Invalid Content-Type. Expected multipart/form-data.' }),
             };
@@ -44,16 +44,16 @@ exports.handler = async (event) => {
         const parts = parseMultipartFormData(Buffer.from(event.body, 'base64'), boundary);
 
         // שמירת הקובץ לנתיב זמני
-        const file = parts.files.file;
+        const file = parts.files.file; // 'file' הוא שם הקובץ שהועלה
         const filePath = path.join('/tmp', file.filename);
         fs.writeFileSync(filePath, file.content);
 
         // יצירת URL ציבורי
-        const publicUrl = `https://${process.env.STORAGE_BASE_URL}.netlify.app/uploads/${file.filename}`;
+        const publicUrl = `${process.env.STORAGE_BASE_URL}/uploads/${file.filename}`;
         return {
             statusCode: 200,
             headers: {
-                'Access-Control-Allow-Origin': '*', // מאפשר בקשות מכל דומיין
+                'Access-Control-Allow-Origin': 'https://ivritgit.netlify.app', // החלף בכתובת האפליקציה שלך
             },
             body: JSON.stringify({ url: publicUrl }),
         };
@@ -62,7 +62,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 500,
             headers: {
-                'Access-Control-Allow-Origin': '*', // מאפשר בקשות מכל דומיין
+                'Access-Control-Allow-Origin': 'https://ivritgit.netlify.app', // החלף בכתובת האפליקציה שלך
             },
             body: JSON.stringify({ error: 'Failed to process file' }),
         };
